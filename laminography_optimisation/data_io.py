@@ -6,16 +6,33 @@ from cil.framework import DataContainer
 from cil.io import TIFFWriter
 import cil.io.utilities
 
-def load_data(file_path):
+
+def load_data(file_path, verbose=True):
     """Load data, image keys, and angles from an NXS file."""
+    if verbose:
+        print(f"Reading data from {file_path}")
+    
     # Load the raw data
     data = cil.io.utilities.HDF5_utilities.read(file_path, '/entry/imaging/data')
+    
+    if verbose:
+        print(f"Data loaded, shape: {data.shape}, type: {data.dtype}")
     
     # Load the image keys (0=tomography, 1=flat, 2=dark)
     image_key = cil.io.utilities.HDF5_utilities.read(file_path, '/entry/instrument/EtherCAT/image_key')
     
+    if verbose:
+        print(f"Image key loaded, shape: {image_key.shape}, type: {image_key.dtype}")
+        unique_keys, counts = np.unique(image_key, return_counts=True)
+        for key, count in zip(unique_keys, counts):
+            key_type = {0: "Tomography", 1: "Flat field", 2: "Dark field"}.get(key, f"Unknown ({key})")
+            print(f"  {key_type} images: {count}")
+    
     # Load the angles (includes angles for flats/darks)
     angles = cil.io.utilities.HDF5_utilities.read(file_path, '/entry/imaging_sum/smaract_zrot')
+    
+    if verbose:
+        print(f"Angles loaded, shape: {angles.shape}, type: {angles.dtype}")
     
     return data, image_key, angles
 

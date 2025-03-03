@@ -4,13 +4,14 @@ import os
 import numpy as np
 from cil.framework import AcquisitionData
 
-from .data_io import load_data, save_reconstruction
-from .preprocessing import preprocess_data, apply_binning
-from .geometry import create_geometry
-from .reconstruction import reconstruct
+from data_io import load_data, save_reconstruction
+from preprocessing import preprocess_data, apply_binning
+from geometry import create_geometry
+from reconstruction import reconstruct
 
-def run_reconstruction(file_path, output_path, tilt_angle, cor_offset=0,
-                      binning=1, detector_pixel_size=0.54, detector_binning=4):
+def run_reconstruction(file_path, output_path, tilt_angle, cor_offset=0, 
+                      binning=1, detector_pixel_size=0.54, detector_binning=4,
+                      verbose=True):
     """
     Main function to run laminography reconstruction pipeline.
     
@@ -30,19 +31,29 @@ def run_reconstruction(file_path, output_path, tilt_angle, cor_offset=0,
         Size of detector pixels in microns, default is 0.54
     detector_binning : int, optional
         Detector binning factor used during acquisition, default is 4
+    verbose : bool, optional
+        Whether to print detailed information, default is True
         
     Returns:
     --------
     reconstruction : ImageData
         Reconstructed volume
     """
-    print(f"Loading data from {file_path}")
-    # Load data
-    data, image_key, angles = load_data(file_path)
+    print(f"Starting reconstruction process")
+    print(f"File path: {file_path}")
+    print(f"Output path: {output_path}")
+    print(f"Configuration: tilt={tilt_angle}°, COR offset={cor_offset}, binning={binning}")
+    print(f"Detector: pixel size={detector_pixel_size}µm, hardware binning={detector_binning}")
     
-    print("Preprocessing data")
+    # Check if file exists
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"Input file not found: {file_path}")
+    
+    # Load data
+    data, image_key, angles = load_data(file_path, verbose=verbose)
+    
     # Preprocess data
-    processed_data, projection_angles = preprocess_data(data, image_key, angles)
+    processed_data, projection_angles = preprocess_data(data, image_key, angles, verbose=verbose)
     
     # Apply additional binning if requested
     if binning > 1:
@@ -53,12 +64,16 @@ def run_reconstruction(file_path, output_path, tilt_angle, cor_offset=0,
     # Create geometry
     num_pixels_x = processed_data.shape[2]
     num_pixels_y = processed_data.shape[1]
+    
+    print(f"Data dimensions after preprocessing: {processed_data.shape}")
+    print(f"Creating geometry for {num_pixels_x}x{num_pixels_y} detector")
+    
     geometry = create_geometry(
-        projection_angles,
-        tilt_angle,
-        num_pixels_x,
-        num_pixels_y,
-        detector_pixel_size,
+        projection_angles, 
+        tilt_angle, 
+        num_pixels_x, 
+        num_pixels_y, 
+        detector_pixel_size, 
         detector_binning
     )
     
@@ -81,8 +96,8 @@ if __name__ == "__main__":
     # Example usage that can be edited for testing
     
     # Path configuration
-    file_path = "/path/to/your/file.nxs"  
-    output_dir = "/path/to/output"       
+    file_path = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/k11-54014.nxs"  
+    output_dir = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/reconstruction/k11-54014"       
     
     # Make sure output directory exists
     os.makedirs(output_dir, exist_ok=True)
