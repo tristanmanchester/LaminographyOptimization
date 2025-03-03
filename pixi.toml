@@ -1,0 +1,21 @@
+[project]
+authors = ["Tristan Manchester <tristan.manchester@diamond.ac.uk>"]
+channels = ["conda-forge", "https://software.repos.intel.com/python/conda", "ccpi"]
+description = "CIL (Core Imaging Library) environment for laminography optimisation"
+name = "laminography_optimisation"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+numpy = "*"
+matplotlib = ">=3.10.0,<4"
+cil = { version = "*", channel = "ccpi" }
+ipp = { version = "=2021.12", channel = "https://software.repos.intel.com/python/conda" }
+astra-toolbox = { version = "*", build = "cuda*"}
+tigre = { version = "*", channel = "ccpi" }
+ccpi-regulariser = { version = "*", channel = "ccpi" }
+ipykernel = "*"
+ipywidgets = "*"
+scikit-image = "*"
