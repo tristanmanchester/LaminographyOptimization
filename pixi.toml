@@ -19,3 +19,10 @@ ccpi-regulariser = { version = "*", channel = "ccpi" }
 ipykernel = "*"
 ipywidgets = "*"
 scikit-image = "*"
+python = ">=3.11,<3.13"
+cudatoolkit = ">=11.8.0,<12"
+
+[pypi-dependencies]
+torch = { version = ">=2.2.0", index = "https://download.pytorch.org/whl/cu124" }
+torchvision = { version = ">=0.17.0", index = "https://download.pytorch.org/whl/cu124" }
+torchaudio = { version = ">=2.2.0", index = "https://download.pytorch.org/whl/cu124" }

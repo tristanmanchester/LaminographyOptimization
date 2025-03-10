@@ -96,15 +96,15 @@ if __name__ == "__main__":
     # Example usage that can be edited for testing
     
     # Path configuration
-    file_path = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/k11-54014.nxs"  
-    output_dir = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/reconstruction/k11-54014"       
+    file_path = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/k11-54013.nxs"  
+    output_dir = "/dls/science/users/qps56811/environments/LaminographyOptimization/data/reconstruction/k11-54013_37.5deg"       
     
     # Make sure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, "reconstruction.tiff")
     
     # Reconstruction parameters
-    tilt_angle = 35.0  
+    tilt_angle = 35
     cor_offset = 0.0  
     binning = 1      
     
