@@ -2,3 +2,15 @@
 # pixi environments
 .pixi
 *.egg-info
+
+# Data, output and test directories
+/data/
+/tests/
+**/grid_search_*/
+**/axis_search_*/
+
+# Python files
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
